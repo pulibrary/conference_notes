@@ -1,4 +1,4 @@
-Blacklight Summit ’22 | Cornell
+### Blacklight Summit ’22 | Cornell
 
 Open source collaborative platform for building discovery solutions
 
@@ -27,9 +27,9 @@ Apache Lucene = Set of Java search libraries that powers Solr and ElasticSearch
 QQ: 
 Does Blacklight utilize iiif resources for image implementation? Would iiif API be “compatible” for such features to properly function? 
 
-Live Presentations: 
+### Live Presentations: 
 
-Miriam Campos-Quinn , John Lowe | Ephemera Presentation 
+### Miriam Campos-Quinn , John Lowe | Ephemera Presentation 
 
 https://cinefiles.bampfa.berkeley.edu/
 
@@ -43,7 +43,7 @@ https://cinefiles.bampfa.berkeley.edu/catalog/61386
 
 QQ: How are the resulting links (ex: of other works of the artist) displayed/ranked? (According to relevance, popularity?…)
 
-Eben English | Boston Public Library
+### Eben English | Boston Public Library
 
 digitalcommonwealth.org
 
@@ -57,7 +57,7 @@ gem used: Blacklight iiif search (makes manifest available to allow for addition
 
 Interested in full-text search content for users, better implementations of solr (may chat w/ Eben)
 
-Phillip Robinson/ Huda Khan | Cornell University
+### Phillip Robinson/ Huda Khan | Cornell University
 
 https://docs.google.com/presentation/d/1Soc847D4LbZNRd6UGPCs-rQ26_6rnwXvrtyePAd_Hvs/edit#slide=id.p1
 
@@ -71,7 +71,7 @@ DSpace: eCommons institutional repos (theses, scholarly articles, etc)
 
 Wikidata linked records made possible through Blacklight
 
-Sean Aery | Duke University
+### Sean Aery | Duke University
 
 5 apps that use Blacklight:
 Catalog
@@ -88,11 +88,11 @@ Took about 2 months focused dev team attention per app
 
 Complications included customizations, Bootstrap major updates to code-language
 
-Bess Sadler, Carolyn Cole, Jane Sandberg, Anna Headley | Princeton University
+### Bess Sadler, Carolyn Cole, Jane Sandberg, Anna Headley | Princeton University
 
 https://docs.google.com/presentation/d/1IdHov-sbl_zIngHemWOs-eGY5Oq_al5nLvHxkraf9cY/edit#slide=id.g15d90492039_0_44
 
-datacommons.princeton.edu
+https://datacommons.princeton.edu/discovery/
 
 Migration from DSpace -> PDC Discovery (integration w/ Blacklight)
 
@@ -120,7 +120,7 @@ Patrons are able to submit form through collection sites for new, improved and p
 
 LCSH (Library of Congress Subject Heading)
 
-Johnathan Rochkind | Science History Institute
+### Johnathan Rochkind | Science History Institute
 
 Template is going for a “brochure” informative formatting
 
@@ -134,11 +134,11 @@ OHMS Oral History Metadata Synchronization (enables to hear transcribed text)
 
 KITHE gem: db metadata records that ends up integrating with Blacklight and solr 
 
-10.4.22
+### 10.4.22
 
-Improving Hyrax Bulk Imports By Customizing Bulrax
+Agenda Item: Improving Hyrax Bulk Imports By Customizing Bulrax
 
-Brad Watson | Emory University 
+### Brad Watson | Emory University 
 
 Digital Repo Software, Ingest time are slow and errant
 
@@ -155,7 +155,7 @@ Creating a Sidekiq Job that pulls the FileSet object and its parent Work from en
 
 Condensed uptime of ingest time from 11 hours to approx. 1 hour
 
-Michael Kanning | University of Penn
+### Michael Kanning | University of Penn
 
 Philly Area Consortium of Special Collections Libraries / Penn Libraries
 
@@ -179,7 +179,7 @@ Searching and faceting functionality is feasible to follow
 
 Uses ruby 3.1.2, Rails 7 and BL 7.26
 
-Bill Dueber | University of Michigan
+### Bill Dueber | University of Michigan
 
 Analyzing string in solr
 
@@ -208,7 +208,7 @@ Keyword tokenizer creates one big token
 
 Restrictive analysis (?)
 
-David Kinzer | rspec methods 
+### David Kinzer | rspec methods 
 
 Line10 indentation of integers (22 4500)
 
@@ -224,13 +224,9 @@ binding.ply(?)
 
 rspec ‘matcher’: relishapp.com
 
-jar (files)(?) Anna H.
-
-John Lowe | UC Berkeley
+### John Lowe | UC Berkeley
 
 BL: solr index (apache lucene) docs index created, BL provides interface to “discover” indexed items (BL API?)
-
-Hector > solr-for-newbies > tutorial for simulating 
 
 CJK text-type? https://www.google.com/search?client=firefox-b-1-d&q=solr+text_cjk
 
@@ -246,13 +242,9 @@ at this stage, you have access to BL/solr parameters (here you can customize sea
 
 Search service will grab the parameters and run the search. 
 
-What are the implications with what we have learned / been exposed to for PUL??? Anna, Bess, Carolyn, Hector, James
+Search service pulls together 2 pieces: a search builder that converts user params (or other context information) into solr query parameters, and the repository connection (which knows how to send + receive solr responses)search service provides a consistent interface for controllers and other classes to request data from solr (with handy methods for a search, single document, and a couple specialty queries)---
 
-￼
-
-and, in words: search service pulls together 2 pieces: a search builder that converts user params (or other context information) into solr query parameters, and the repository connection (which knows how to send + receive solr responses)search service provides a consistent interface for controllers and other classes to request data from solr (with handy methods for a search, single document, and a couple specialty queries)---
-
-David Kinzer | BL on Rails
+### David Kinzer | BL on Rails
 
 BL = a Rails engine 
 
@@ -298,7 +290,7 @@ mozillasciene.github.io/roadmapping
 
 Q: prospect/outlook for solr/BL tech consultant?? (upgrading deprecating, migration, etc)
 
-Eric Pugh | querqy.org
+### Eric Pugh | querqy.org
 
 Open source project that adds common search control to solr
 
@@ -310,7 +302,7 @@ Relevancy tuning demo
 
 Search Management UI | SMI
 
-Nikitas Tampakis | BL Plugins - Add-Ons Session (Arc/Geo/Spot)
+### Nikitas Tampakis | BL Plugins - Add-Ons Session (Arc/Geo/Spot)
 Sean Aery (ArcLight)
 
 Initiated at Stanford
@@ -337,7 +329,7 @@ Eliot (PUL) attends geoblacklight monthly meetings
 
 Q (Bess): What is a “committer” role, format of committer calls, etc.
 
-Benjamin Arminton | BL & Ecosystem
+### Benjamin Arminton | BL & Ecosystem
 
 Can serve as a discovery front-end within a larger infrastructure
 
