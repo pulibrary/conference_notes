@@ -29,3 +29,7 @@
     * register_projections
     * built from ansible-core with devel PR's
 * Ansible Playbook [Debugger](https://docs.ansible.com/ansible/latest/user_guide/playbooks_debugger.html)
+
+[Afternoon Edge](edge.md)
+[Afternoon Linter](lint.md)
+[Afternoon VSCode](vscode.md)
