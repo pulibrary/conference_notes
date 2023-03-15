@@ -2,7 +2,10 @@
 
 https://docs.google.com/document/d/1c7OuYh7ZFxZHV9N0mlZHhcMmKq4BpmK6EiZv80bnviQ/edit 
 
-## DevOps: Better value sooner better happier ()
+Presented by: Gene Kim
+
+* DevOps: Better value sooner better happier ()
+
 * State of DevOps research
   * cross population study.
 
