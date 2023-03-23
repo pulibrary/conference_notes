@@ -2,7 +2,6 @@
 
 Presented by: Imani Barbarin
 
-🐬🍄
 https://docs.google.com/document/d/1j3loX-FBsipHs0zgJdYyDhj-S3gDJs4sdHCwxR7KShY/edit
 
 * Exclusionary culture around accessibility - encountered wehn trying to motivate people to be more accessible

@@ -29,7 +29,3 @@ Three a11y objectives:
 Since they added the accessibility scorecard, people are talking about accessibility and axe more frequently on slack, and more issues are getting closed!
 
 Customer-reported accessibility issues are prioritized too, but they aren't part of the gamification.
-
-
-🐬🐬🐬🐬🐬🐬🐬🐬
-🍄🍄🍄🍄🍄🍄🍄🍄

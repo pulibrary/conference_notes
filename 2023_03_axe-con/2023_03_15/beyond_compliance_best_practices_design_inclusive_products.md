@@ -48,5 +48,3 @@ https://docs.google.com/document/d/1uQGKeI3nHmpMmBrcP6WuBqaTSmhSp1Mx0KsxVhX2FjA/
 * Start with empathy
 
 * Figma plugin Stark https://www.figma.com/community/plugin/732603254453395948/Stark 
-🐬🐬🐬🐬🐬🐬🐬🐬
-🍄🍄🍄🍄🍄🍄🍄🍄
