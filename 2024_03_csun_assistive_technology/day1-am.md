@@ -1,5 +1,6 @@
 ### Keynote: Disabled People Drive Innovation by Haben Girma
 
+* [Recording on youtube, talk starts at 35:32](https://www.youtube.com/live/WW7erYVOej4?si=h5781GMrdL0B9mJD)
 * Very great keynote!
 * Opening up communication to include more people can take some time, and it can be unexpected, but ultimately it makes it better for everyone
 * She shared a story of going to a bar with a keyboard braille display -- it ended up that her classmates really appreciated communicating via keyboard and braille display, because they don't have to shout over the loud music
