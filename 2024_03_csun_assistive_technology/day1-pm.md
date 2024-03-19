@@ -44,5 +44,50 @@
   * Reading mode in the browser can be a workaround that users employ
 
 
-
 ### Web Accessibility for Speech Recognition Users by Shashank Kapur
+
+* Shashank is from BarrierBreak.
+   * Nearly half of the testing team members at BarrierBreak are people with disabilities, and people with disabilities are part of all testing projects
+* Speech recognition helps with mobility disabilities, temporary and situational disabilities, and multi-tasking
+* Speech recognition tools:
+  * Dragon Naturally Speaking and Speech Recognition on Windows
+  * Voice Control on macOS/iOS
+  * Voice Access on Android
+* Smart assistants cannot fill in a form, navigate a web page, write a word document.  So this talk focuses on speech recognition
+* Interaction methods:
+  * "Click Submit"
+  * "Show numbers" -> see which number is the interactive element you want -> "Click five"
+  * "Show labels" or "Show names", if visual label is missing or if you need to select an image from a page and you need to know what its name is
+  * Mouse grid: requires a series of commands, time-consuming.  Handy when websites aren't built well.
+  * Dictation command.  You can even tell it to add a heading or list.
+* Things that cause issues
+  * It causes an issue if multiple elements have the same label, because if you say "Click [x]", it won't know what to do.  Links with identical text, for example "Learn more..."
+  * No keyboard focus indicator
+  * Image alt text doesn't match the image.  Or missing alt text
+  * content only available only on mouse hover, dropdown menus, or tooltips, since it can require mouse grid
+  * clickable area too small -- even mouse grid can't be effective here
+  * Accessible name does not match visual label
+  * Looks like a button but is actually a link
+  * drag and drop without an alternative way to interact with it
+  * content not visible
+  * modals
+  * focus not managed correctly
+  * inconsistent naming (e.g. it is called "Search" in one place, "Find" in another)
+* Techniques
+  * unique and descriptive text labels for all ui controls
+  * nice focus indicator
+  * native HTML semantics, rather than custom
+  * include visual label at the start of accessible name of controls
+  * label the form inputs
+  * avoid unpronouncable labels (acronyms, abbreviations, etc.)
+  * avoid extra spacing between words, makes it harder to recognize it as a phrase
+  * limit iframes
+* How to start
+  * They test using Dragon + Chrome, then iOS + Voice Control and Android + Voice Access
+* Multilingual environments: very important to use the `lang` attribute
+* Different issues can come up with screen reader testing vs. voice control (or both at the same time).  Important to do both.
+* To learn how to test with it, just start using it all the time, incorporate it into your daily work.  Doesn't have to be dragon, just give the built-in option a try.  Youtube it, get used to the different modes (normal commands vs. numbers vs. mouse grid), so that when you run into an issue, you can know if it's an issue with the page or you just don't know the right way to interact with it.
+
+### The First WCAG AAA Compliant Digital Campus Map by Brandon Biggs
+
+* 
