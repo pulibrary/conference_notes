@@ -64,6 +64,43 @@
     * one form of resistance is just that the engineering teams have a million other things on their plates.  So contracting it out can free up engineering team.
     * engineers are not a representative sample of users!
     * contractors can be trained to use very niche software (e.g. a security software that requires background knowledge)
-  * Example from testing at Microsoft: the blind users said "I have no idea when copilot is available is not."  And it turns out that this was a usability issue affecting everyone, they just hadn't picked up on it yet.
+  * Example from testing at Microsoft: the blind users said "I have no idea when copilot is available is not."  And it turns out that this was a usability issue affecting everyone, Microsoft just hadn't picked up on it yet.
  
 ### Single Page Application Accessibility by Doug Abrams
+
+* Doug Abrams is a Senior Accessibility Engineer at The Paciello Group
+* [Powerpoint slides for this talk](https://visperoinc.sharepoint.com/:p:/s/TPGiPermalinks/EYgFJ8gxbLxNqil8KLYYgIUBXq_KUZ2Z0KR9LIPHR_J44w?e=a8rSx2&download=1)
+* Two types of challenges:
+  * Direct challenges are a result of how the framework behaves
+  * Indirect challenges are when the framework makes things harder for the developer to find and fix the issues
+* Direct challenge in dynamic content: managing focus
+  * Manage content when it is added (if items are dynamically added to a list, set focus to the first new list item)
+  * Manage content when it is lost (if you delete an item from a list, what happens to the focus that was on the delete button?)
+  * We don't want focus to move back to the `<body>` or end of the page
+  * Focus also affects magnification software
+  * [Helpful article](https://www.tpgi.com/how-to-avoid-breaking-web-pages-for-keyboard-users/)
+  * How to fix:
+    * Identify where focus should go
+    * Make sure it can get focus (`tabindex=-1` if needed)
+    * set the focus.  But some frameworks make this difficult, since they don't want you specifically working with the DOM with methods like `document.getElementById()`
+* Direct challenge: page navigation
+  * Very helpful resource: [Marcy Sutton's research on the best way to announce client-side routing](https://www.gatsbyjs.com/blog/2019-07-11-user-testing-accessible-client-routing/)
+  * Update the page title
+    * especially important if they move to another tab, and have to move back to the tab
+  * Set focus to the first heading of new content
+  * Make sure the focus indicator is visible
+* Indirect challenge: HTML is simplified into components (which may not even use html)
+  * Developers lose insights into the semantics of what they are writing
+  * Using divs with onclick events, for example.
+  * This is an indirect challenge: developers are looking at components, while testers and end users interact with the rendered HTML -- they are not even working with the same things (developer sees `<my-great-button-component>`, end user sees `<button><img src="i-have-no-alt"></button>`.
+  * It's important for developers to learn more about how components render with various props, especially for any third-party components
+* Indirect challenge: reusing components in different contexts
+  * If a component contains a heading, reusing in a different context could give an illogical heading structure
+  * Image alt text may change according to context and what you are trying to convey in that specific page
+  * The meaning of a link may also change according to context
+* Indirect challenge: third-party components
+  * It's very easy to grab a new 3rd party component from npm, push it out to users, without ever even seeing what HTML is rendered, much less looking into accessibility
+  * The component might say "it is accessibile out of the box", but you should always dig deeper.  It can sometimes be a way for them to absolve themselves of accessibility responsibility ("our component is great, if there's an accessibility issue, it must be in your app").
+  * Read the accessibility documentation!  If there isn't any, or if it's minimal... that's not a good sign.
+  * Test your site, including people with accessibilities in the testing ("nothing for us without us")
+* [Gatsby is a React-based framework with a good focus on accessibility](https://www.gatsbyjs.com/)
