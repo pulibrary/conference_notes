@@ -46,7 +46,7 @@
 
 ### Web Accessibility for Speech Recognition Users by Shashank Kapur
 
-* Shashank is from BarrierBreak.
+* Shashank is from [BarrierBreak](https://www.barrierbreak.com/).
    * Nearly half of the testing team members at BarrierBreak are people with disabilities, and people with disabilities are part of all testing projects
 * Speech recognition helps with mobility disabilities, temporary and situational disabilities, and multi-tasking
 * Speech recognition tools:
@@ -87,7 +87,29 @@
 * Multilingual environments: very important to use the `lang` attribute
 * Different issues can come up with screen reader testing vs. voice control (or both at the same time).  Important to do both.
 * To learn how to test with it, just start using it all the time, incorporate it into your daily work.  Doesn't have to be dragon, just give the built-in option a try.  Youtube it, get used to the different modes (normal commands vs. numbers vs. mouse grid), so that when you run into an issue, you can know if it's an issue with the page or you just don't know the right way to interact with it.
+* There is a [cheat sheet for Voice Control](https://www.tempertemper.net/blog/voice-control-for-macos-commands-cheatsheet)
 
 ### The First WCAG AAA Compliant Digital Campus Map by Brandon Biggs
 
-* 
+* Brandon Biggs is from [XR navigation](https://xrnavigation.io/)
+* [Slides will be available here](https://www.csun.edu/cod/conference/sessions/index.php/public/presentations/view/1716)
+* Maps are almost always inaccessible: screen reader will just announce useless things generally
+* Maps convey three things: landmark knowledge, route knowledge, and survey knowledge
+* If a map doesn't convey those things to blind users too, it is not accessible
+  * In a survey of common map libraries, none of them even reach WCAG level A
+  * It's a huge issue: if there's a hurricane coming, how are you supposed to know if you are in the path of the hurricane, and where you are supposed to safely evacuate to.
+* Turn-by-turn directions can be an okay alternative, but they don't really give the spatial information
+* Tactile maps are awesome, but require braille literacy and require tactile graphic literacy.  ANd they are physical, and hard to maintain.
+* NFBC called a resolution for all institutions of higher ed in california to get inclusive campus maps.  There may soon be a similar resolution on the national level.
+* There is research into this topic, especially in gaming.  But no vendors providing these yet.
+* [Audiom](https://www.audiom.net/) is the product in question
+  * For low vision, you can zoom in and out, and also having the audio and visual at the same time
+  * For audio version: it is as if you are a person in a video game, it describes your surroundings
+    * radar feature: it beeps in the direction of the selected object.  Sound effects for buildings, roads. spatial audio, meant for headphones
+    * Audio version works with keyboard (attached to computer or phone).  There are incompatibilities with VoiceOver and touch interactions in-browser.
+    * it has a tactile component too with refreshable braille displays
+  * You provide them with a GeoJSON object.  They can also integrate with openstreetmaps, but it can be out of date (so they update it).
+  * Indoor mapping data format (IMDF) is a standard that Apple created, it's the de-facto standard for indoor data
+* Accessibility information that goes into the maps: [Taskar center](https://tcat.cs.washington.edu/) AccessMap, [goodmaps](https://goodmaps.com/) for indoor information.
+* Gets accessibility/routing information from [transportation data equity initiative](https://tcat.cs.washington.edu/tdei/)
+* large language models are *horrible* at spatial information -- you can't just pop a map pdf into ChatGPT and convert it into vector data.
