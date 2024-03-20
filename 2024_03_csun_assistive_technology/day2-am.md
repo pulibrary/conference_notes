@@ -71,3 +71,9 @@
   * There was no linting, people did definitely forget to do the directives, or used the wrong one.  It was mainly a lot of communication
 * They did create some wrapper components.  For example: ngb's datepicker and timepicker needed accessibility work, but they are always used in the exact same way, didn't need any config options, so might as well just create a component.
 * Question about performance: they didn't measure performance impacts, but the old version before the migration was really slow, so it was a performance improvement overall
+
+### Analysis of Campus Disability Support Center Websites by Lesley Farmer
+
+* [Campus Disability Support Center websites slides](https://tinyurl.com/dscwebsites)
+* None of the sites were fully accessible.  Issues included videos without captions, etc.  A lot of those are because of the larger campus site, or because they are stuck on an old system, or in the middle of some migration.
+* Recommendation: test your disability services website with users with various disabilities.
