@@ -39,3 +39,35 @@
 * [Canada Post Mercury design system](https://design.canadapost-postescanada.ca/en/mercury/components/breadcrumbs.page#!navtabd2049073e25) has comprehensive accessibility documentation
 
 ### Standardizing Accessibility with Angular Directives by Brian Glidewell
+
+* [Angular Slides will be available on the CSUN web site](https://www.csun.edu/cod/conference/sessions/index.php/public/presentations/view/1726)
+* General problem: you want to use a 3rd party component, but don't want to be locked in to their accessibility bugs
+* Attribute directives can help create consistent accessible experiences while preserving extensibility
+* This talk is specific to Angular, though other frameworks have similar tools and structures
+* Angular has components and directives.  Directives can be attached to a component or a DOM element to change its behavior.
+* The project was to re-implement the UI of an entire platform in just a few months, in advance of an important accessibility audit
+* They wanted to avoid "Accessibly but inconsistent": every widget works individually, but the controls and behaviors of each widget are different and unpredictable
+* They started with [ng-bootstrap](https://github.com/ng-bootstrap/ng-bootstrap)
+  * It claims that "all widgets are accessible", but it definitely has some accessibility shortcomings
+* One approach: wrapper components
+  * They would create a component that contains the ng-bootstrap one and fixes its accessibility issues
+  * Limits configurability and extendibility, have to build each use case into the same component
+  * You have to reimplement all the same `@Inputs` (props for Vue) from the ng-bootstrap component on the wrapper component
+  * Nesting these wrapper components can become unweildy
+* So instead, add attribute directives to the ng-bootstrap component
+* Example: pagination
+  * the ng-bootstrap component had most of what they need: `role="navigation"`, it is marked up as a `<ul>` with `<li>`s, it does aria-current
+  * But it has some problems:
+    * causes a weird scroll on screen width of 320 pixels
+    * it does not announce page changes
+    * the component had some options that were considered harmful for usability, so they wanted to prevent developers from using those options
+  * They used the [`AfterViewInit` lifecycle hook](https://angular.io/api/core/AfterViewInit), and had a bunch of methods to modify the DOM according to their needs with the [Angular renderer](https://angular.io/api/core/Renderer2)
+* Dropdown menu
+  * they keyboard interactions were all wrong
+  * they wanted to implement a specific aria role
+  * They again created a directive that added event listeners and modified the DOM through the renderer
+* They created a lot of documentation for their directives, but if the engineers don't read the docs...
+* How do you make sure developers actually use those directives?
+  * There was no linting, people did definitely forget to do the directives, or used the wrong one.  It was mainly a lot of communication
+* They did create some wrapper components.  For example: ngb's datepicker and timepicker needed accessibility work, but they are always used in the exact same way, didn't need any config options, so might as well just create a component.
+* Question about performance: they didn't measure performance impacts, but the old version before the migration was really slow, so it was a performance improvement overall
