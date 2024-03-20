@@ -50,3 +50,32 @@
 * The survey software was selected because it was the most accessible, but there were still a few issues (e.g. it was difficult to use with high amounts of screen magnification)
 
 ### Designing Your Own Accessibility Vendor Monitoring Program by Juanita George
+
+* [powerpoint slides for the vendor monitoring presentation](https://drive.google.com/file/d/1UxWupjK169YFiXgtkL6_sEkSV6SUqHqw/view)
+* Importance of a vendor program
+  * Customers can't tell where your product ends and when the vendor product begins
+  * You can't have a diverse workforce if you don't purchase accessible tools
+  * Vendor claims need to be validated
+* Build relationships with procurement people
+* get access to the database of contracts, and start documenting
+  * last accessibility audit date and results
+  * bugs and fixes
+  * ACRs
+  * their public accessibility policy, etc.
+* other teams may be inventorying vendors for other reasons, build relationships with those people
+* what makes an ACR more reliable?
+  * Assessment done by a qualified, reputable independent third party
+  * Tester name provided
+  * Testing tools and processes included
+  * Detailed information provided
+  * Date is recent
+  * Based on a full audit of the product
+* To validate vendor claims, do some smoke testing -- timeboxed quick checks, including users with disabilities.  Let the vendor know you are doing it.
+* Think about the vendor's own accessibility team: can you do things to help the vendor's team?  Deliver smoke testing results in helpful ways, make it clear how important accessibility is to us.
+* Create a monitoring plan, expect and plan for non-conformance
+  * Figure out how you can do this without taking up all your time -- timeboxing
+* Know when vendor renewals are taking place and be involved in the conversation
+
+### Accessibility QA for eBooks: Are Automatic Tools Enough? by Gregorio Pellegrino
+
+* 
