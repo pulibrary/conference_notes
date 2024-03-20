@@ -78,4 +78,34 @@
 
 ### Accessibility QA for eBooks: Are Automatic Tools Enough? by Gregorio Pellegrino
 
-* 
+* Gregorio Pellegrino is from [Fondazione LIA](https://www.fondazionelia.org/en/), works on training publishers how to create accessible epubs
+  * founded by the Italian publisher association and Italian blind union
+  * LIA has certified 35,000 books from 78 publishing imprints.  They certify books on a title by title basis.
+  * They do 5,000-6,000 books/year
+  * LIA creates the accessibility metadata about each book as part of their quality assurance process
+* Automatic tools (like [ACE by DAISY](https://daisy.org/activities/software/ace/)) only catch 32% of errors in epubs
+  * ACE is based on aXe from deque
+* Standards are important, since the supply chain is quite large: digital publications and metadata -> distribution platform -> libraries, bookstores, aggregators -> services -> reading devices.  It can go well early in the supply chain, but problems can arise later in the supply chain (e.g. the credit card processor isn't accessible so the reader can't actually buy the book)
+* Their process:
+  * Publisher sends them the epub
+  * They run it through EPUB check and ACE
+  * They run it through their internal automated tool: LIA suite
+    * example of what it checks: is the language correct?
+    * it checks their best practices too (which are similar to the [Nordic guidelines](https://format.mtm.se/nordic_epub/2020-1))
+  * There is a guided manual check
+  * If there are issues, send back to publisher
+  * If there are no issues, produce the metadata for the publisher, and certify it
+    * They already have all the information needed for the accessibility metadata (e.g. does it include images, mathematical formulae, etc.) as a deliverable of the automated and manual testing.
+* Common accessibility issues that they find in ebooks
+  * alt text for images is not meaningful
+  * images of text with wrong description
+  * words are tagged as wrong language
+  * missing semantic tag
+  * headings used for visual effect, rather than structure
+  * content identified only by color
+  * accessibility metadata that does not reflect the actual content
+* Rely on experts (you can learn by doing with a teacher) and standards
+* [EPUB Accessibility 1.0](https://www.w3.org/submissions/epub-a11y/) is the standard they test against, which is WCAG + some epub-specific requirements
+* Textbook publishing is complicated:
+  * the law requires them to provide an online version for every print book sold
+  * Often in PDFs locked in vendor web sites, but epubs and reflowable may be more common due to upcoming legislation.
