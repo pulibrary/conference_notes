@@ -17,3 +17,36 @@
   * WEBBY Term uses standard keystrokes
  
 ### Latest Survey Findings from Online Disability Communities by Norbert Rum, Nick Goodrum, and Charlie Beach
+
+* [Slides of the survey presentation -- powerpoint](https://bit.ly/WebSurvey2024)
+* [Findings are available here](https://webaccessibilitysurvey.com/)
+* The [r/blind subreddit](https://www.reddit.com/r/Blind/) was created in 2010, where this survey began
+* Noticed that there were some discrepancies between what surveys said, and what their experience was
+* They went to other online communities, not just r/blind.  They reached out to WebAIM too.  And they made it really general, not just about screen reader users, but all users of assistive technology
+* It was structured to allow you to select which technologies you use (e.g. somebody could say that they use a screen reader, a screen magnifier, and other technologies)
+* The reddit blackout happened during the survey, which influenced results (there are some negative comments about reddit, for example)
+  * r/blind was a key part of this discussion in the news media, showing that accessibility was a big deal
+* 45% of participants use screen magnification -- we should pay more attention to magnification in our work!
+* Unlike the WebAIM survey, NVDA is the clear leader as primary screen reader
+* The majority of respondents only used a single screen reader
+* CAPTCHAs -- not a good experience.  11% fail CAPTCHAs every day.  Half fail every week or more frequently.
+* Overlays were *not* generally appreciated
+  * Pros
+    * option to remove animations
+    * fixing divs with onclick handler
+  * Cons
+    * they steal focus
+    * they are memory hogs that crash the browser
+    * they start the screen reader reading twice at the same time
+    * they make the site inaccessible
+    * some people didn't run into issues because they block overlays, or just don't use sites with overlays
+* Lots of users use mobile devices with keyboards.  And keyboard navigation is not intuitive on mobile.
+* Screen reader users
+  * 66% of the time, navigate by headings, landmarks was only 15%
+  * 44% of screen reader users use a mouse at least sometimes (e.g. screen magnification to a very high percentage, then use screen reader for words that are too long to fit on the screen)
+  * Screen readers are used by more than just blind and low vision people
+* only 18% of screen reader respondents used a braille reader
+* Survey fatigue: r/blind gets constant survey requests from universities
+* The survey software was selected because it was the most accessible, but there were still a few issues (e.g. it was difficult to use with high amounts of screen magnification)
+
+### Designing Your Own Accessibility Vendor Monitoring Program by Juanita George
