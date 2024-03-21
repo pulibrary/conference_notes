@@ -49,4 +49,30 @@
       * they automated all the evidence collection that the external auditors will need
   * False positives are an issue.  The ACP already has the ability to make exceptions, so a ticket doesn't end up going to the team.  But the goal is if a control has _any_ false positives, they must revise or remove the control, because people need to be able to trust the ACP.
  
-### Advancements in Indoor Wayfinding
+### Advancements in Indoor Wayfinding by Mike May, JR Rizzo, Kelly Lovett
+
+* So many people rely on GPS for outdoor navigation, but there is no equivalent technology for indoor navigation
+* One challenge is UX: people might be going directly somewhere, might want to browse to see what's nearby, need to include error tolerance (like how GPS can be a bit off)
+  * If you are navigating to a specific location, you don't want a lot of point of interest information about what's nearby because it would distract.
+  * Different if you are using a white cane vs. a service dog
+* Grant from [NIDILRR](https://acl.gov/about-acl/about-national-institute-disability-independent-living-and-rehabilitation-research) for GoodMaps, NYU and [Open Doors Organization](https://opendoorsnfp.org/)
+  * Open Doors Organization: travel and transportation accessibility organization.  They work with Amtrak on training, do wheelchair repair after the airlines break them, etc.
+* Indoor positioning solutions
+  * Bluetooth Low Energy: these are beacons that you install (some are battery-powered, require maintenance, but still work during a power failure) and they transmit. Low security risk.
+  * Wifi positioning system, aka wifi fingerprinting.  Security/privacy regulations make this more difficult.
+  * Ultra-wideband.  Low security risk.  Can be very accurate, down to the centimeter.
+  * Visible Light Communication.  Uses LED modulation.  Requires direct line of sight from the selfie cam on the phone.  Many big box stores (e.g. Home Depot) have this for their staff.
+  * Geomagnetic indoor positioning.  Accurate, but it requires pre-mapping.  Unlimited range.  Magnetometers on the phone. Minimal privacy risks
+  * LiDAR (light detection and ranging).  Requires pre-mapping with laser beams!  Very accurate and good range.  Low privacy risks.
+  * VPR (vision place recognition) -- basically matching visual features against the camera.  Privacy concerns around the image data transmission and capturing passers-by in the original photograph.
+* Goodmaps provides additional information, not trying to replace a white cane or dog
+  * It uses a LiDAR scanner -- they walk through the entire space and take the pictures
+  * Camera Positioning Standard (CPS)
+  * It uses the Apple format
+  * They recently updated their UX so that it can be useful to non-blind users too
+  * PDX airport uses it!  Also Michigan State.
+  * They use the Apple indoor map format standard
+  * All usage is anonymous, they don't collect any personal information about the user at all.  They do give statistics and route info to the customer sites.
+  * They have separate apps for indoor and outdoor goodmaps -- eventually they want to combine them.
+ 
+### Helping Organizations Grow Accessibility Maturity
