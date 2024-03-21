@@ -29,3 +29,24 @@
 * You can search for walking and public transit routes that do not have steps to climb up/down
 
 ### Automating Accessibility: Tying A11Y to Your Build Pipeline by David Martin, Kenneth Bigler, and Sabu Philip
+
+* The presenters are from Intuit
+* Two of the three presenters work in security positions, rather than accessibility positions
+  * There are connections between security and accessibility in businesses: both can be seen as "extra" things that developers/companies don't want to invest in.
+  * However, they find that it is easier to talk to upper management about security than accessibility in terms of money and risk
+  * Intuit has 300 full-time security people, only 3 full-time accessibility people
+  * They find it helpful to talk about accessibility to executives in terms of reputational risk.  They don't want a negative newspaper headline.  It helped that one of Intuit's recent acquisition was sued for an inaccessible website.
+* Gather accessibility metrics during CI/CD process
+* They started with [lighthouse ci](https://github.com/GoogleChrome/lighthouse-ci), then added axe-core via jest, cypress, or [playwright](https://www.npmjs.com/package/@axe-core/playwright)
+  * They then converted it into a lighthouse score
+  * Display lighthouse scores over time for each product
+  * They have a "data lake" for their IT operations in AWS S3 and AWS Athena.  They put all the results into the data lake, then make dashboards.
+  * They also have an Automated Compliance Platform (ACP), which opens jira tickets automatically if the score goes below a certain threshold.  Those jiras include a step-by-step process for recreating the issue/confirming the fix
+    * The jiras might even have a "fix it for me" button, that automatically executes the steps in the ticket
+    * The ACP already existed for security, because they wanted security findings to be actionable, not hidden in big PDFs of audit findings (avoid audit fatigue)
+    * Stakeholders of ACP: internal compliance community (e.g. security people), developers, managers (who can see the SLA, dashboards, etc.)
+    * They used to do external security auditing every 6 months, now it is every 2 weeks
+      * they automated all the evidence collection that the external auditors will need
+  * False positives are an issue.  The ACP already has the ability to make exceptions, so a ticket doesn't end up going to the team.  But the goal is if a control has _any_ false positives, they must revise or remove the control, because people need to be able to trust the ACP.
+ 
+### Advancements in Indoor Wayfinding
