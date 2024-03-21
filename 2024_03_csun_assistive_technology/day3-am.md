@@ -75,4 +75,43 @@
   * All usage is anonymous, they don't collect any personal information about the user at all.  They do give statistics and route info to the customer sites.
   * They have separate apps for indoor and outdoor goodmaps -- eventually they want to combine them.
  
-### Helping Organizations Grow Accessibility Maturity
+### Helping Organizations Grow Accessibility Maturity by David Sloan and Anne Scallan
+
+* [Accessibility maturity slides](https://bit.ly/helpingmaturitycsun24)
+* Maturity models help organization do 3 things:
+  * Understand their current state
+  * Identify their desired future state
+  * Figure out the steps to get to that future state -- this is what the talk is about, in a series of case studies
+
+#### Case study: organization that had accessibility audit result, but they didn't know how to prioritize them
+  * Their goal was to publish a VPAT ACR soon that did not include any "Does Not Support" items
+  * So they organized the issues as a draft VPAT
+  * Issues were prioritized in alignment with the business goal of providing a VPAT to enable others to procure their services
+
+#### Case study: organization had a few accessibility champions, but struggling to increase accessibility of products.  Testing was ad-hoc and could not be analyzed strategically
+  * They created a ticket system, which allowed them to easily re-use remediation advice between tickets
+  * They created a dashboard to show the tickets, and did a retrospective of the most commonly missed accessibility requirements in the past year
+
+#### Case study: leadership was interested in accessibility, but product teams didn't have much knowledge
+  * Weekly office hours
+  * Product teams were able to shift left: addressing accessibility earlier in the development lifecycle, asking more advanced questions
+
+#### Case study: client was getting regular audits (every other years), but weren't seeing much process
+  * Incorporate automated testing into dev pipeline
+  * Product teams don't have to wait 2 years to get feedback on whether their fix was good
+  * Instead of having experts spend their time auditing, they focus more time on reviewing automated results with product teams and figuring out how to address them as part of the software development lifecycle
+
+#### Case study: client had many products, each of which needed a VPAT ACR
+  * Their procedure was inconsistent across products, also they wanted to add VPAT for European accessibility legal standards
+  * They asked the people who wrote the ACRs what their challenges were, and then they re-wrote the procedures to be streamlined and in accordance with the relevant standard
+  * This helped the organization start providing user-focused accessibility documentation, which helped the users who had been having a really hard time previously
+
+#### Case study: organization had a good accessibility culture, but the subsidiary was very inconsistent
+  * There wasn't a single person to talk to at the subsidiary at the organization, you had to talk to each product team, each of which had a different level of buy-in
+  * They added a new position to the subsidiary: product manager for accessibility, who worked with all the teams
+
+#### Case study: empowering teams to include disabled people in user research
+
+* Organization wanted to do a usability study, but they did not have the internal capacity to design, recruit, moderate a study.
+* The organization partnered with tpgi: tpgi explained what they did, and made decisions together.  Tpgi did a training for the staff about how they set up the study, what decisions they made and the impact they had.
+* Staff from the organization were able to learn from what tpgi did, and built the skills to do the usability studies themselves in the future
