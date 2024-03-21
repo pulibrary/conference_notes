@@ -33,8 +33,5 @@
 
 #### Questions
 
-* Multi-line braille display -- there are very exciting new devices.  It has never been supported by screen readers before, so there will be UX questions coming up.
+* Multi-line braille display -- there are very exciting new devices.  It has not been supported by screen readers before, so there will be UX questions coming up.
 
-### Accessible Typography, Fonts, Text, and More by Jared Smith
-
-* 
