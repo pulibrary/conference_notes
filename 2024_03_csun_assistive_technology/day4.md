@@ -37,8 +37,30 @@
 * It's okay if actions aren't focusable, as long as you can reach it through a keyboard shortcut that it documented in the shortcut list
 * [Their testing procedure](https://bit.ly/wd-aka)
 
+#### challenges
+
+* Android keyboard shortcuts differ between Android 13 and Android 14, between manuafacturers (Samsung vs Pixel have very different shortcuts), and depending on the keyboard
+
+
 ### The Crossroads of Accessibility and Localization by Erin Lucas and Katherine Zinger
+
+* Four areas of localization
+  * translation
+  * localization (removing US-centric expressions with locally relevant references)
+  * conversion (using the correct date format, currency, time zones, measurement units)
+  * transcreation (approaching untranslatable terms)
+* Prioritizing QA is essential for both accessibility (does it work and is usable?) and localization (is it understandable, culturally relevant, respectful?)
+  * Both have huge pushes of "AI will just fix it automatically, right?"
+* Braille is a huge gap
 
 ### CSS + Accessibility: Inclusion Through User Choice by Carie Fisher
 
-### Using the Accessibility Tree to Debug HTML by Christina Adams
+* [CSS slides](https://bit.ly/UserFocusedCSS), includes lots of css examples
+* The following override the OS defaults -- which you may wish to do if -- when testing with your users, the defaults don't meet their needs; or you need to include branding, etc.
+* `@prefers-color-scheme`: light mode vs dark mode, widely supported
+* `@forced-colors`: Windows High Contrast themes are a use case for this: it will probably make a lot of things black and white, but if you want to make your own high-contrast (for example if you have branding requirements)
+* `@inverted-colors`: Mac has an inverted color mode.  However, only Safari has respects this CSS media feature.
+* `@prefers-contrast`: no preference, more contrast, less contrast.  Widely supported.
+* `@reduced-transparency`
+* `@prefers-reduced-motion`
+* `@prefers-reduced-data`: it's not supported by any browsers, but will be so cool once it is!
