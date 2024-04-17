@@ -74,6 +74,7 @@ Very good talk!
   * Then look at IDs that are in both, and see if they are the same.
   * At the end, it gives you the SQL you would need to make the two tables the same
   * Disadvantages: you need a third-party app (and the open source version of dbeaver doesn't have it), composite keys make it more challenging, and requires disk space
+    * I wonder if [this tool](https://docs.datafold.com/data_diff/cross-database_diffing) is any good
   * Anecdotally, I heard from another conference attendee that dbeaver is super helpful for them in observability
  
 All of the above work in certain circumstances.
@@ -203,3 +204,37 @@ They compared the apdex of the upgrade to the normal range of apdex.  There is a
 [More about their database infrastructure](https://handbook.gitlab.com/handbook/engineering/infrastructure/database/).
 
 ### Schema Evolution - The Hard Parts by Gwen Shapira
+
+Interesting idea: database diff tools to generate the exact diff you need
+
+#### Process problems
+
+* Simultaneous DDL changes can cause failures, but most migration tools aquire a lock first to prevent this issues.  I wonder what rails does here
+
+#### Lock problems
+
+* Don't put all of your long-running and your ACCESS EXCLUSIVE lock commands in the same transaction.  Break them into smaller transactions.
+  * Example: `BEGIN; ALTER TABLE t1 RENAME; ALTER TABLE t2 RENAME; COMMIT;`
+    * If t1 rename has run, but somebody is doing some long-running query on t2, you have to wait for a lock on t2.  While you are waiting, t1 is locked, even though the work is done.
+    * Fix: set lock timeouts as part of your migration script (I wonder if rails does this?).  Also, explicitly ACQUIRE LOCK, so that you fail very early in the process
+   
+#### Logical replication
+
+It doesn't replicate DDLs.  There are OSS solutions though.  Generally, you keep a log of DDLs in a table in your primary, use logical replication to send it over to the replica.  Then, the replica will subscribe to this log and run the DDLs in secondary.
+
+### A high-level introduction to the query planner in PostgreSQL by Richard Guo
+
+#### Structure of the planner
+
+* Each query can be executed in different ways.  Each of these ways is represented in a data structure called a Path.
+
+* Phases of planning:
+  * preprocessing
+    * simplify the query if possible
+      * e.g. if it is a strict function with constant-null inputs, or is immutable and has constant inputs, like it can simplify 2 + 2 into 4
+      * expand simple SQL functions in-line
+      * simplify the join tree
+    * collect information
+  * scan/join planning (how to implement FROM/WHERE)
+  * post scan/join planning
+  * postprocessing (convert it into the form that the executor wants)
