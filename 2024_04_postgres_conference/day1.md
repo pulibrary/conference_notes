@@ -73,9 +73,71 @@ Very good talk!
   * Then identify IDs that only in exist in one or the other.
   * Then look at IDs that are in both, and see if they are the same.
   * At the end, it gives you the SQL you would need to make the two tables the same
-  * Disadvantages: you need a third-party app (and the open source version doesn't have it), composite keys make it more challenging, and requires disk space
+  * Disadvantages: you need a third-party app (and the open source version of dbeaver doesn't have it), composite keys make it more challenging, and requires disk space
  
 All of the above work in certain circumstances.
 
 ### Troubleshoot PostgreSQL performance by use case by Wanda He and Thuymy Tran
 
+#### Postgres architecture
+
+* Processes
+  * postmaster is the primary process
+  * each connection has a relevant backend process (a worker process) which communicates with the client connection -- a client connection never has direct access to memory
+  * utility processes: autovacuum, checkpointer, etc.
+* Memory
+  * Global shared memory
+    * Shared buffers
+    * WAL buffers
+  * Local private memory
+    * Per-process memory
+    * Caches for metadata, execution plan, query execution memory
+* Storage
+    * Data files (the base subdirectory)
+    * WAL files (the pg_wal subdirectory)
+
+#### Key performance factors
+
+* CPU
+  * Sub-optimal query
+  * Too many active connections
+  * Is `max_parallel_workers_per_gather` too high?
+  * Monitor: % total cpu, % system cpu, % wait cpu
+* Memory
+  * High # of connections
+  * Sub-optimal memory intensive query
+  * Have you done some bad configuration (e.g. did you set `work_mem` high -- it is per connection and per SORT!)
+  * Monitoring: `pg_proctab` extension, `pg_backend_memory_contexts`,  `pg_log_backend_memory_contexts`, freeable memory, % buffer cache hit ratio
+* Storage
+  * Not enough space
+  * Table/index bloat means that vacuuming is not effective, so it has to consult a lot of pages for each query
+  * Checkpoints need tuning
+  * IOPs, MB/s, disk read/write latency per IO
+* the patterns you use in your application to access the db
+  * Blocking / locking
+  * Long-running transactions
+  * Idle in transaction
+  * Idle connections
+
+
+#### Specific use cases
+
+* Idle connections
+  * Misconception that they do not affect performance.
+  * They did a demo with 1,000 idle connections, and we saw that freeable memory went way down
+  * Recommendation: use a connection pooler.  They used RDS proxy endpoint.  You could use pgbouncer.
+  * They did the same demo with 1,000 connections, and the memory didn't drop!  And only the needed 12 connections actually used memory on the postgres.
+  * You can add up a lot, if lots of applications are each opening, say, 10 connections
+* VACUUM is being blocked (perhaps by a long-running transaction that is using that tuple, so it can't be cleaned up)
+  * Demo: set up a long-running transaction
+  * Look at running time and buffers, running time went up and up.
+  * logical replication can also affect autovacuum
+  * They did a query to find what process was blocking, and what it was doing.  Then they terminated the transaction.
+  * There is also an idle_in_transaction_timeout setting in postgres.  But it's more important to check your application code to make sure you are closing transactions properly
+
+#### Tips for better performance
+
+1. Use pgbouncer to handle lots of connections
+1. Make sure vacuuming is working well.  Monitor vacuuming to make sure that it is containing bloat.
+1. Tune query performance
+1. Avoid long-running transactions, avoid a storm of connections, avoid subtransactions, and don't use FKs excessively
