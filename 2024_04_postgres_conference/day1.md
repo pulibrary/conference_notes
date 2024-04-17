@@ -74,6 +74,7 @@ Very good talk!
   * Then look at IDs that are in both, and see if they are the same.
   * At the end, it gives you the SQL you would need to make the two tables the same
   * Disadvantages: you need a third-party app (and the open source version of dbeaver doesn't have it), composite keys make it more challenging, and requires disk space
+  * Anecdotally, I heard from another conference attendee that dbeaver is super helpful for them in observability
  
 All of the above work in certain circumstances.
 
@@ -141,3 +142,64 @@ All of the above work in certain circumstances.
 1. Make sure vacuuming is working well.  Monitor vacuuming to make sure that it is containing bloat.
 1. Tune query performance
 1. Avoid long-running transactions, avoid a storm of connections, avoid subtransactions, and don't use FKs excessively
+
+### Zero-downtime Postgres Major Version Upgrades by Biren Shah
+
+Biren is a Senior Database Reliability Engineer at GitLab
+
+
+#### Zero downtime
+
+* The presenter called zero downtime a "clickbait title" 🤣.
+* Zero downtime means all services are available to end users.  No request is instantaneous, so they determine "Apdex", the threshold of how it is still usable.
+
+#### Postgres upgrades: how do they work and why are they hard?
+
+* Minor version upgrades -- mainly you can just put the new binary in place and restart
+* Major version upgrades are much more complex
+
+#### Upgrade methods
+
+* pg_dumpall: this has the most downtime, and can be resource intensive.  It is the safest method available, so if it meets your needs, just do it!
+* pg_upgrade: simple, reasonably fast and safe, but there is no rollback if something goes wrong.  Still has downtime.  But if it's within your threshold, no need to do something more complex
+
+#### Gitlab infrastructure
+
+* Primary and secondary, using patroni for streaming replication
+* Rails connects to PgBouncer
+* Uses Consul to handle the replicas
+
+#### How they used to do it
+
+1. Create second cluster from a disk snapshot (they don't do a logical replication from scratch, since it will take forever!)
+2. Sync new with main cluster
+3. Put gitlab into maintenance (read-only) mode for several hours
+4. pg_upgrade primary
+5. Recreate standby
+6. Run QA tests and benchmark (this is the most time-consuming part, but it is important since there is no rollback)
+
+Bad impact on users, and they really avoided major upgrades as a result.
+
+#### How do they do it now
+
+The answer is: logical replication and [some really cool ansible playbooks](https://gitlab.com/gitlab-com/gl-infra/db-migration)
+
+Issues with logical
+* Some schema changes are not replicated.  To resolve this: they have a feature flag to stop all DDL changes.  When the feature flag is off, it queues those changes.  When they turn the feature flag back on, any DDL changes that were queued. 
+* Sequences are not replicated, so SERIAL/AUTO INCREMENT will break.  To resolve this: measure the daily growth of all sequences.  They found that if they just increase the sequence by 1 million during the migration, they won't run into the issue.
+* Each table needs a replica identity (e.g. primary key).  They already had this, so no problem.
+* It is more complex (prone to human errors, so big need for automation and testing).  They ansible-ized it, and it works great.  They also do tons of testing: "If it hurts, do it more often".  They ran several dry runs in production in advance.
+
+As part of their process, they run both $SOURCE and $TARGET in tandem, with half of all requests going to the new, and half going to the old.  Ansible does a lot of automated checks to make sure that $TARGET is working well, including checking for long-running transactions, autovacuum issues
+
+The application is also smart: it can tell how fresh a replica is, and if it is not fresh enough, choose a different one.  Also, if it needs a read-only or a read-write node.
+
+The playbook checks for zombie processes, long-running things, and it just stops execution if they are not in a good state.
+
+pgBouncer: they run PAUSE, which will finish all the existing connections.  Wait until the logical replication lag is zero bytes, then they run RESUME on pgBouncer.  Their ansible playbook will be running consistently to check the amount of logical replication lag, and then they use that to find a low-traffic time.
+
+They compared the apdex of the upgrade to the normal range of apdex.  There is a measurable change in apdex during the switchover.  But it is still well within their threshold, and was not even the lowest apdex they would have during that date.
+
+[More about their database infrastructure](https://handbook.gitlab.com/handbook/engineering/infrastructure/database/).
+
+### Schema Evolution - The Hard Parts by Gwen Shapira
