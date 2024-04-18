@@ -95,4 +95,89 @@ They are only snapshots.  You should run these regularly and calculate the delta
   * You want the most popular things in shared_buffers, so you can get it from memory instead of disk.
   * During a query, postgres will evict cold pages (the pages that aren't popular or currently in use) to free up the space it might need
   * Ring buffers: they prevent cache thrashing (without it, if you did `SELECT * FROM huge_table` it would evict all the pages from the shared buffers, whether they are popular or not)
-* HOT updates
+* HOT updates - I didn't follow this part
+
+### Advanced strategies for PostgreSQL Lock Management by Greg Dostatni 
+
+#### lock manager
+
+* aka lmgr
+* MVCC is critical to how lock manager works
+  *  MVCC guarantees that while you are in a transaction, you see the version of the database as of the start of the transaction; work that other transactions have done since the beginning of the transaction should not affect the work you are doing.  Row versioning is how it achieves consistency and isolation
+  *  Optimistic locking
+  *  MVCC Considerations: Bloat, transaction id wraparound (the transaction id is 4 bytes, if it overflows, then it doesn't know what transaction's work goes first)
+ 
+ * Lock-related structures in memory:
+   * table of LOCKs in shared memory
+   * table of PROCLOCKs in shared memory
+   * For each process, a LOCALLOCK structure that keeps track of its locks.  And a fastpath (I didn't follow what that is)
+
+#### Types of locks in lock manager
+
+* Regular locks - these lock db objects, the ones that we usually see
+* SIReadLocks - for enforcing very strict FIFO
+* Spinlocks - may or may not be used much anymore.
+* LWLocks (lightweight locks) - internal postgres processes trying to access shared memory or other resources
+
+#### Questions that monitoring should answer
+
+1. Which transaction is blocked
+2. Which transaction is doing the blocking
+3. Which objects get blocked the most
+4. Average amount of time that things are blocked
+
+### Monitoring PostgreSQL: Navigating the Landscape of Metrics, OS and Hardware Relationships, and Toolsets by Charly Batista
+
+#### Goals of monitoring
+
+* service availability
+* performance optimization
+* alerting and incident response
+* capacity planning
+* continuous improvement
+
+#### metrics
+
+CPU
+* CPU utilization
+* User vs System CPU time
+* context switching -- recommended to check this, it's not something people think about as often
+
+Memory Metrics
+* Memory buffers and caches
+* Page faults
+
+Disk I/O
+* I/O wait time
+
+Network
+* packet loss
+* retries/retransmissions
+
+postgres metrics
+* full table scans
+* checkpoint activity
+* autovacuum activity
+* long-running queries
+* wait events from pg_wait_events (pg 17) -- will be very helpful.  It tells you _why_ something is waiting
+
+procfs system
+
+linux monitoring tools: sysstat package and 0x.tools
+
+#### postgres monitoring tools
+
+* Built-in
+  * pg_stat_statements (or pg_stat_monitor, which is built on it and adds some features)
+  * pg_buffercache
+* External CLI
+  * pg_view
+  * pg_activity
+* External web interfaces -- these expose metrics, but don't provide everything you need for monitoring
+  * pgwatch2 and pgobserver
+
+### PostgreSQL architecture considerations for application developers by Peter Celentano and Tracy Jenkins
+
+### Miscellaneous
+
+* [pg_search](https://blog.paradedb.com/pages/introducing_search) (part of ParadeDB) seems like an interesting project.  It tries to make postgres full-text search more like elasticsearch or solr.
