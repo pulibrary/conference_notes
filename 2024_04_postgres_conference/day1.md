@@ -146,6 +146,8 @@ All of the above work in certain circumstances.
 
 ### Zero-downtime Postgres Major Version Upgrades by Biren Shah
 
+[Gitlab upgrade slides](https://postgresconf.org/system/events/document/000/002/180/2024-04-postgresconf-PostgreSQL-Zero-Downtime-Postgres-Upgrades-at-GitLab.pdf)
+
 Biren is a Senior Database Reliability Engineer at GitLab
 
 
