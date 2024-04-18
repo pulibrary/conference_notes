@@ -58,4 +58,41 @@
 
 ### Becoming a PG_STAT_* (star) by Chirag Dave and Sami Imseih
 
+#### Dynamic views
 
+* These have a PID (process id) column
+* The entry disappears when the connection closes
+* `pg_stat_activity` is a famous one
+  * important columns: pid, xact_start, query_start, state_change (when did it go between Active, Idle, Idle in transaction)
+* `pg_stat_progress_vacuum`
+  * vacuum has 6 or 7 different phases, like "scanning heap" (reading through the heap to find dead tuples).  This is in the phase column
+
+
+#### Cumulative stats
+
+This is what we will focus on today.
+
+They are only snapshots.  You should run these regularly and calculate the deltas as part of your monitoring.
+
+* pg_stat_wal: look at wal_fpi column (WAL full-page index) and wal_buffers_full
+* pg_stat_bgwriter: buffers_backend should be as close to 0 as possible, it means less work that needs to be done at query time
+* `pg_stat_all_tables`: maximize n_tup_hot_update (dropping unused indexes can help with this).  Also check VACUUM/ANALYZE stats: n_dead_tup and n_mod_since_analyze.
+  * If _n_dead_tup_ keeps growing, something is wrong with your autovacuum
+* In postgres 16+, you can see when the last seq scan was, to see how effective your indexes are.  If you are seeing seq scans on large tables, you need to work on those indexes.
+* pg_stat_statements Uses an extension
+* pg_statio_all_tables and pg_statio_all_indexes (per relation)
+* pg_stat_io: useful and added in 16.  Look at context, extends, and evictions columns.  Also, to get an accurate cache hit ratio `(hits/(reads+hits)::numeric / 100)`.
+
+#### postgres internals
+
+* Writing in general:
+  1. Write it to the WAL log
+  2. Update shared buffers
+  3. Hit a checkpoint
+  4. Write it to the disk
+* Shared buffers
+  * These are a bunch of 8k pages that are in memory
+  * You want the most popular things in shared_buffers, so you can get it from memory instead of disk.
+  * During a query, postgres will evict cold pages (the pages that aren't popular or currently in use) to free up the space it might need
+  * Ring buffers: they prevent cache thrashing (without it, if you did `SELECT * FROM huge_table` it would evict all the pages from the shared buffers, whether they are popular or not)
+* HOT updates
