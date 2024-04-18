@@ -178,6 +178,38 @@ linux monitoring tools: sysstat package and 0x.tools
 
 ### PostgreSQL architecture considerations for application developers by Peter Celentano and Tracy Jenkins
 
+This talk was based on [a blog series](https://aws.amazon.com/blogs/database/postgresql-architecture-considerations-for-application-developers-part-1/).
+
+#### Why should app developers care about pg internals?
+
+* Prod db performance issues usually start in app dev.  Data scaling, queries that are inefficient.
+* It's more cost effective to catch issues earlier in the process, rather than when there is a prod emergency
+
+#### Configuration for production
+
+Most frequently need to be tuned
+* Cluster-level tuning in postgresql.conf: autovacuum, logging, random_page_cost, max_connections, shared buffers, work_mem
+* Session level tuning with SET
+
+#### Postgres core concepts
+
+* ACID: Atomicity, Consistency, Isolation, Durability
+* Locks:
+  * Shared locks (allow multiple transactions to read from an object simultaneously)
+  * Exclusive locks (prevent other transactions from accessing data objects until the lock is released)
+  * Lock escalation: to reduce locking overhead, sometimes postgres replaces many specific locks with a single more restrictive one
+  * Seeing a lot of locks in pg_locks is not a problem -- the locks are there to help
+* VACUUM
+  * They mentioned VACUUM FREEZE -- which is a more aggressive version of vacuum to prevent transaction overflow.  They suggest running it every once a while in production.  It takes some resources, but nowhere near as much as VACUUM FULL
+  * No need for VACUUM FULL anymore with pg_repack, which is good, since VACUUM FULL should never be run in any typical production environment.  If you want to do pg_repack, you really need to make sure you have enough disk space (plan for double the space).  Still it's better to prioritize making sure that autovacuum and autoanalyze are working well.
+    * Fill factor configuration
+* Connection states
+  * Idle - java likes to do a connection pool, so this will lead to Idle connections
+  * Idle in transaction - this is problematic, the transaction is open
+  * Idle in transaction aborted - the idle in transaction hit a timeout threshold
+  * Recommendation: monitor pg_stat_activity to keep track of transaction state
+  * Do less in each transaction so there is less idle in transaction
+
 ### Miscellaneous
 
 * [pg_search](https://blog.paradedb.com/pages/introducing_search) (part of ParadeDB) seems like an interesting project.  It tries to make postgres full-text search more like elasticsearch or solr.
