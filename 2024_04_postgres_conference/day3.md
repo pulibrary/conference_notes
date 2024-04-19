@@ -69,3 +69,25 @@ This comes from repeatable reads isolation level in the SQL 92 standard.  This c
 
 * The presenter pointed out that the [tests for isolation levels](https://github.com/postgres/postgres/tree/master/src/test/isolation) are super cool, and recommended taking a look!
   * It has a README saying how to run the tests and add new ones
+
+### Local-first application architecture using Postgres logical replication by Conrad Hofmeyr
+
+* Goal: local-first architecture, where the user has all of their data on their local machine
+  * Many interesting benefits for both end users and developers
+  * Web examples of local-first: [excalidraw](https://excalidraw.com/) and [yjs](https://github.com/yjs/yjs)
+    * And definitely electron applications too
+* CouchDB has PouchDB, MongoDB has Realm?, which you can sync local to remote, nothing similar for Postgres
+* Focus on SQLite since it is so heavily used in mobile apps
+* They have a middleware for writes.  Logical replication writes from postgres to their middleware.  Clients authenticate to the middleware using JWTs, and add the data to a local SQLite database
+* App will write new data to SQLite, and then the application must also sync back to Postgres
+  * Interesting question: if you INSERT a record with a new id in SQLITE, then INSERT another row that refers to it, when it writes back to Postgres.  Answer: just use UUIDs. 
+
+#### Challenges in using streaming replication
+
+* Streaming replication is awesome and enabled this project
+* Schema changes are a challenge -- to minimize the impact, the SQLite database is schemaless json
+* Handling different row identifier information other than primary keys -- they recommend primary key
+
+### Informally...
+
+* pg collector seems like a really cool tool for monitoring/stats
