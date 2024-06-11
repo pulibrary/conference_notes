@@ -8,9 +8,11 @@ A theme of several presentations I went to was "start small, think big." For fir
 
 We can trigger Tower runs based on merged PRs on GitHub, this may be useful for our firewall workflow.
 
+We can (and maybe should) put the network EE on a separate execution node. We can even put that node in a different subnet / behind the firewall.
+
 ### Automating Pan-OS workshop
 
-Can do this workshop (and several others) any time at http://red.ht/ansible-labs. The lab uses a single playbook for at least two templates, using tags in the templates to control which actions run and which are skipped. 
+Can do this workshop (and several others) any time at http://red.ht/ansible-labs. The lab uses a single playbook for at least two templates, using tags in the templates to control which actions run and which are skipped.
 
 There is a pre-built EE for Pan-OS: registry.gitlab.com/redhatautomation/panos-ee:latest.
 
@@ -19,7 +21,7 @@ There are complications to automating Pan-OS.
 
 The PanOS demo does commit as a separate template. I think this was the combined "commit and pushto devices", but it might not have gone through Panorama at all.
 
-Network modules support check mode ("dry run"). They also support dynamic inventory. You can check the collections inside an EE using inventory. I think this is from github.com/network-automation/panos-instruqt. 
+Network modules support check mode ("dry run"). They also support dynamic inventory. You can check the collections inside an EE using inventory. I think this is from github.com/network-automation/panos-instruqt.
 
 Some of the templates in the lab launch directly from the list with no review/confirm screen - not sure how to do that.
 
@@ -27,7 +29,7 @@ Some of the templates in the lab launch directly from the list with no review/co
 
 ### Discover Financial Services preso
 
-Discover uses YAML data structures as variables, taking steps to improve a brownfield network setup. They have designed "undo" templates that re-use variables in case something goes wrong. They integrate with SNow and Ansible for their network automation. 
+Discover uses YAML data structures as variables, taking steps to improve a brownfield network setup. They have designed "undo" templates that re-use variables in case something goes wrong. They integrate with SNow and Ansible for their network automation.
 
 Their workflow begins with a PR that updates the data structure. Then they have a pre-change validation step. If that fails (usually because the requested change is not allowed), they have a "handle failure" template, which passes messages to the requester but allows the overall workflow to "succeed" so the automation team doesn't need to review every bad request from a user. They also have a post-change validation step. If that fails, the "handle failure" template also runs, kicking off a Back Out This Change playbook that uses `set_stats` for tracking the change that needs to be reverted. The "handle failure" template also uses some vars and tasks that were new to me:  `ansible_failed_task.name` and `meta: end_play`, which ends the play cleanly.
 
