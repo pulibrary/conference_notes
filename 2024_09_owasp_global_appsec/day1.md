@@ -61,3 +61,5 @@ LINDDUN - you can use it with the 4 questions, just like STRIDE
 [LINDDUN GO is a card game](https://downloads.linddun.org/linddun-go/default/v240118/go.pdf) you play to do the privacy threat model 
 
 They used an integrated library system as an example for this framework!  Fun!
+
+How do you mitigate threats?  With Privacy Enhancing Technologies (PETs) -- some of these sounded really interesting!  They didn't go into a lot of detail, I'd like to learn more.
