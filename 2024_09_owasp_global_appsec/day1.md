@@ -63,3 +63,9 @@ LINDDUN - you can use it with the 4 questions, just like STRIDE
 They used an integrated library system as an example for this framework!  Fun!
 
 How do you mitigate threats?  With Privacy Enhancing Technologies (PETs) -- some of these sounded really interesting!  They didn't go into a lot of detail, I'd like to learn more.
+
+
+
+### [OWASP Top 10 OSS Risks](https://owasp.org/www-project-open-source-software-top-10/) by George Apostolopoulos
+
+These are risks for your open-source dependencies.
