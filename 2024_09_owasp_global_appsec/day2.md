@@ -20,6 +20,13 @@ Recommendation
 
 ### Millions Of Public Certificates Are Reusing Old Private Keys by Dylan Ayrey and Joseph Leon
 
+* They found that 10% of certificates were created using the same private key as another cert
+* https://crt.sh/ is a central log of all tls certs that have been issued -- this is where they got this data (by searching for the public key).  CAs must log here, or else the browser will give an unsafe cert alert
+* They focused on certs that had been revoked.
+* They gave a story: developer accidentally commits the cert's private key to version control, they revoke the cert and put out a new cert using the same private key.  The revoking/new cert was essentially useless in this case, since a bad actor could still decrypt all the traffic.
+* cert-manager.io and acme.sh -- two popular cert managers -- reuse the same private keys always unless you otherwise specify.  certbot, fortunately, creates a new private key each time.  They believe that this automation is responsible for much of the reuse.
+* Their recommendation: don't reuse private keys to make new certs.  Don't reuse them to make new certs for different subdomains.
+* This only is a security issue if the private key is leaked.  But they found that some large companies reuse the private key for 10 years -- so it is not impossible that they key is leaked somehow during that time.
 
 ### Learning from Past Security Breaches: Strengthening AppSec Efforts and Focus by Jon McCoy
 
