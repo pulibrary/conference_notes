@@ -30,5 +30,6 @@ Recommendation
 
 ### Learning from Past Security Breaches: Strengthening AppSec Efforts and Focus by Jon McCoy
 
+Emphasis on putting runbooks in place _before_ a security event.  And blameless post-incidents meetings.  And supporting new members of the security community.
 
 ### I Know What You Did Last Summer: Lessons Learned from Privacy Breaches and Scandals by Dr. Kim Wuyts
