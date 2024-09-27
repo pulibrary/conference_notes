@@ -69,3 +69,28 @@ How do you mitigate threats?  With Privacy Enhancing Technologies (PETs) -- some
 ### [OWASP Top 10 OSS Risks](https://owasp.org/www-project-open-source-software-top-10/) by George Apostolopoulos
 
 These are risks for your open-source dependencies.
+
+### The Container Escape Room: An Exploration of Container Escapes by Amit Schendel
+
+This was a very informative talk.  I found it a good intro to linux kernel and container security concepts.
+
+task_struct represents each process (including a running container)
+processes are namespaced
+seccomp: a security facility in the linux kernel that restricts the system calls a process can make
+  For example, a seccomp policy prevents docker containers from loading new kernel modules
+Linux Security Module (LSM) -- like SELinkux or AppArmor
+Capabilities: a way of grouping certain privileges traditionally associated with superusers into units
+Cgroups: resource isolation: limit access to resources like cpu, storage, memory for particular processes
+
+container runtimes (runc, crun, youki): cli tools that creates all this configuration.  docker cli is a wrapper around a container runtime.
+  * the presenter recommends trying out these commands, and even writing our own container runtime as an instructive activity
+  * there is a presentation about how to write your own container runtime in 100 lines of code
+
+Kernel vulnerabilities are one way to escape a container.  For example Dirty Pipe (CVE-2022-0847)
+The most common is to misconfigure the container.
+  * Running with the --privileged flag gives it ability to just nsenter as root
+  * Exposing the container runtime socket (most common if you are running docker in docker)
+
+container escape does not have to be RCE -- it could just be reading sensitive files on the host, for example.
+
+container runtime vulnerables.  Vulnerabilities commonly involve symlink
