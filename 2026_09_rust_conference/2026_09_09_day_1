@@ -1,0 +1,461 @@
+### Rust Adoption at Scale with Ubuntu / Jon Seager
+
+upki -- https://discourse.ubuntu.com/t/an-update-on-upki/77063 .  New project to check if a TLS cert is revoked or not -- typically this is a browser-level thing, but moving it to the OS level would allow it to be consistent across applications 
+
+### A Decade of Rustls / Joe Birr-Pixton and Daniel McCarney
+
+[https://rustls.dev/blog/2026-09-08-a-decade-of-rustls/](blog version of this update)
+
+### Scaling infrastructure with confidence in the era of AI / Emma Forman Ling
+convex - a reactive database
+TS functions execute as transactions in the database
+challenge was: 100x query load
+Index cache requirements:
+- Consistency
+- multi-tenant
+- Concurrent
+
+Shuttle tests to run randomized testing
+LLM Agent was not successful at recreating race condition bugs until they started using the existing shuttle infrastructure.  It gave them a lot more confidence that they wouldn't add regressions.
+
+Did not reach for complex data structure or architecture (even though the LLM agents would have done it for them).  Instead they were sure to build a caching layer that they understood, with randomized tests to give them confidence.
+
+### Project update: Bringing Rust into Python / Tomáš Šedovič 
+
+A talk about the process of incorporating Rust into CPython
+
+### Good or Bad Vibes? Coding with AI with Rust / Lisa Crossman
+
+Rust has some features that makes it more suitable for LLM generation:
+* When an LLM generates Rust, it must prove to the compiler it can run (which is more meaningful in Rust since it is stricter than other languages)
+* No null checks needed
+* Exhaustive pattern matching
+* Encouraging small composable functions (which fit within a context window nicely)
+* rustfmt keeps consistent code styling across projects
+* informative, well-structured errors
+
+LLM Failure modes in rust:
+* `unsafe` overuse when transpiling Rust from other languages
+* `unwrap()` and `expect()` overuse
+* Stale knowledge of Rust and library APIs (just what was in the training data, not the rust that has been written since)
+* Fabricated dependencies
+* Scope creep
+* Fabricated tests
+* Compiler can catch a lot of things, but it does not know your domain
+* Harcoding data -- messes up your data analysis
+* Design-level mistakes
+* Edge cases
+
+Agent should run clippy after it writes some Rust, treat Clippy violations as blocking
+
+Testing local inference models in ollama on a one-off task:
+* strand-rust-coder 14b (minimal and correct)
+* qwen2.5-coder
+* DeepSeek Coder 32b
+* Llama 3.2 3b (compiled but was totally wrong, with a confident explanation of the wrong behavior)
+
+strand-rust-coder was not as effective in an agentic loop
+
+ MicroBiorust
+ bioinformatics libray for microbial genomics
+ uses PyO3~9.7* faster than bioPython ~90% reduction per job
+ Newick tree parser
+
+Rust is more verbose -- will require more tokens than, e.g. python.
+Do energy savings from the Rust code in the future outweigh energy costs of the LLM?
+
+What controls does the programmer have in the agentic loop?
+* Hard stop conditions: tell the agent when it must pause and wait for a human
+* Being careful about what is in context
+* In bioinformatics, there is a new convention of GROUNDING.md of domain knowledge
+
+### Detecting Borrow and Provenance Bugs across unsafe Rust and C/C++ Interoperability / Joannah Nanjekye
+
+This is a general talk about different techniques for detecting these types of bugs.  The theme of the talk: "The address may be valid while the access is not"
+
+4 questions you ask for this class of bugs:
+
+* Is the address valid?
+* Is the allocation alive?  or has it been freed?
+* Provenance: where did the pointer originate?
+* Do we have permission to access this memory?
+
+Pointers
+* In her first example, there was a pointer created in Rust and shared with C
+* In this case, the pointer was just a vehicle to transport the memory address with C, it did not
+  provide any guarantees.  So the programmer has to be just extremely careful with it and ask those
+  4 questions for each use.
+
+A bug can satisfy the borrow checker and still be unsafe.  So if we want to create a bug detector, what info do we need to know?
+
+Safe boundary -> Byte-level -> Semantic validity -> Ownership ware -> cross language ->. trade offs
+
+Same running object - same pointer- richer information at each stage
+
+Byte level: Program load/store, Compiler instrumentation check adress before access, runtime metadata valid poisoned
+* Example: instrument the compiler to check that an array index is valid before accessing it
+
+Shadow memory: 
+* fully addressable?
+* partially addressable?
+* poisoned?
+
+You use one byte of shadow memory to store whether 8 different bytes of "real" memory are addressable or not, etc.
+
+
+Spatial safety:
+Illegal Zones | Addressable Object | Illegal zones (out of bounds access - trap)
+
+Semantic undefined behavior:
+* The memory can be live but wrong
+* 
+```rust
+let mut x = 10;
+let p = &mut x as *mut i32;
+
+unsafe {
+    let a = &mut *p;
+    let b = &mut *p;
+    *a += 1;
+    *b += 1;
+}
+```
+
+Address live?
+Within bounds?
+Borrow permission valid?
+
+You can check for these kinds of bugs using Semantic Execution.  You add contextual information (metadata) to be able to detect these types of bugs.  You add provenance information, initialization, validity information to a pointer.
+
+Selective Validity:
+Targeted checks need lightweight metadata:
+
+Balancing coverage vs performance
+* At every layer of these checks is a tradeoff of accuracy vs. performance
+
+Miri project is a specific implementation, different implementation but same goal
+
+Cross-language borrow enforcement is the technique she likes to use a lot
+
+Eliminating redundunt checks: hybrid evidence
+dynamic and static analysis you are ble to delete some redundunt checks
+
+Hardware supported provenance:
+* CPU/ISA (pointer tags capabilities metadata support) -> Runtime (less shadow lookup faster validation) -> Goal (semantic chesk closer to native)
+
+
+Gradual safety for legacy systems: incrementally adopt these checks (like gradual typing)
+
+Summary:
+* Byte validity - find spatial and temporal faults
+* Semantic validity - track provenance initialization language invariants
+* Ownership aware cost control - use lifetimes to target checks
+* Cross language permission - carry borrow/ provenance state across FFI
+
+
+### Tokio, Rayon, and the GPU: Profiling a Radiology AI Pipeline in Rust
+
+1. ARIES a home grown LLM for radiology
+1 B paramters, 1000s X-ray & CTY reads/day
+1 GPU one workstation card for the whole hospital network
+
+Ran a trial having a group of radiologists using it and a group not using it
+The results were 80% efficiancy gains
+
+The shape of the AI pipeline
+* Build the model 
+DataLoader-raw DICOMs + report text, 
+Trained using 200 TB of data 24 hours to run the data
+* Run the model
+
+Inference: optimize for latency
+* targeting less than 5secs for xray
+< 30s for CT 
+
+The version one for this project was in python: used 8 gpus , 8 python processes, one process for GPU. ..not efficient
+
+- Move to Rust: 
+Training: 
+Dataloader - Rust 
+   one process , N thin clients
+Trainign loop - python : PyTorch unchanged
+Model
+
+- Inference
+Live pipeline - pure Rust
+Tokio coordinates. Every study, request and connection is a task. The control flow is the code
+CPU-heavy work is shelled out to Rayon
+
+- How did Rust do: 
+stability and correctenss generally solved
+
+- Profiling: 
+The slow paths:
+Training the dataloader
+Inference a CT study
+
+- How we process a list of items: an async stream
+example
+* each stage is .map(f) + .buffered(n) ; n is per stage - I/O and CPU parallelism are very different numbers
+* buffered keeps the output in order - which the training loop needs
+
+- Meet tracing
+tracing crate - structured, span-based instrumentation. Aspan is named region of time, with fields.
+
+* spans go to a subscriber; 
+
+- Instrumenting the async stage
+- Instrumenting the sync stage
+
+used chromes trace viewer to view the results
+
+- Maximizing throughput with an ordered stream
+* .buffered(n)
+
+Tools:
+* perf: a linux system tool 
+
+The fix: one image per core, no rayon inside
+disable rayon but dependencies still use rayon
+
+
+### Reverse Engineering Rust Malware in 2026 / Cindy Xiao
+
+* [Gallery of rust malware](https://github.com/decoderloop/rust-malware-gallery)
+* A wide variety of malware types, motivations, and platforms
+
+Distinction: malicious code (e.g. malicious evm-units crate, you could see the source) vs malware binaries (which we will focus on, since it requires reverse engineering)
+
+* `arrayref` crate example: the build script downloaded a binary for your platform
+
+What libraries are being used in rust malware?  The same crates everyone else is using.  As well as `obfstr`, which obfuscates the strings in a binary.  So you can't just run the `strings` command and see which filenames the binary has hardcoded.  Makes it very annoying for a reverse engineer!
+* They gave a cool example of adding a breakpoint in the debugger -- showing how it is tricky and you only see the de-obfuscated code right before it is actually used.
+* `obfstr` is dynamic based on memory addresses, so it is hard to actually find the string without... running the program
+
+* Binary static analysis tools (IDA Pro, Ghidra, Binary Ninja, angr)
+  * Finding the `fn main` in a static analysis code
+  * Rust binaries have their own runtime code that runs before `fn main`, but these tools are used to C.  So they take you to where the C main would be, not the Rust main.
+  * So we look for landmarks.  For example, the Rust stdlib runtime initialization code on Linux opens /dev/null a bunch
+  * Eventually you get to a function pointer to a humungous function, it is `fn main()`
+
+* Finding `strings` in a binary
+  * CStrings end with a null terminator
+  * Rust string slices have a pointer to the start of the string and a length
+
+* Finding `panic!` location metadata in Rust binaries
+  * When Rust panics, it gives you a nice message: "Panicked in file X, line Y, col Z"
+  * That is stored in a struct in the binary, you can recover information about the source that way!
+  * You can find out a lot about the author with these!  The path of the crate that might panic, you
+    can find out exactly which crate versions, what directory they compiled in.
+  * You can find out the version of the Rust stdlib they were using (and hence the Rust version too)
+  * Rust malware developers could theoretically remove this, so you can't rely on it being there.
+
+* library code similarity matching tools
+  * but Rust binaries are quite inlined, so this doesn't work in those cases
+
+* calling conventions
+  * how you pass data from one function to another, which registers do you look in, etc.
+  * Go has a calling convention guarantee when calling other Go code.  But Rust does not,
+    it is not guaranteed.
+  * An example of a reverse engineering tool finding an argument in a binary -- it found the
+    arguments, but it didn't know about Rust string slices, so it looked like there was a
+    gigantic string as one argument then a small integer.  But that was actually a single
+    string slice with its (short) length.
+
+Good documentation of how new language features are implemented: very helpful for reverse engineering
+
+Generative AI tools have no place in creating educational materials -- how can I teach people
+if they don't know if I understand it or not?  The only place for it is in, say, using it to write a deterministic script.
+
+
+### Listening to the Radio with Rust 
+The radio spectrum is full of signals: FM music stations, aircraft transponders, ham radio repeaters, and even an atomic clock broadcasting the exact time. With a $30 USB dongle and some Rust code, you can tune in to all of it.
+
+This talk is an introduction to software-defined radio (SDR) through the lens of Rust. We'll start with what's actually out there on the airwaves: the surprisingly rich world of signals you can receive with cheap hardware. Then we'll walk through the Rust ecosystem for SDR: connecting to an RTL-SDR receiver, working with raw IQ samples, and turning those samples into something meaningful.
+
+Along the way, we'll build three small programs: an FM radio receiver that demodulates broadcast stations, a decoder for a shortwave time signal, and an ADS-B-based flight tracker. Each demo highlights different strengths of Rust for signal processing — zero-cost abstractions for real-time DSP pipelines, strong typing for managing sample rates and frequency math, and the performance needed to keep up with a continuous stream of radio data.
+
+No prior radio or DSP experience is needed. You'll leave with a working mental model of how software-defined radio works and a clear path to start experimenting with Rust and radio yourself
+
+Writing small defined software radio applications in Rust
+fieldtheories.blog
+
+- FM Radio
+The antenna is picking waves in the air
+IQ Signals
+signal are demodulated
+
+- AM Radio
+
+- Aircraft Tracking
+Hardware: two chips
+R820T2 selects which part of the spectrum 
+
+Hardware: The tuner
+
+create: rtl-sdr-rs read data fro USB 
+or run rtl_tcp as a separate process to serve the IQ bytestream over IQ stream
+
+I and Q 
+physics: signal theory
+signal(t) = A* cos(2pft + φ)
+Form bytes to IQ
+
+The program receives IQ values as a stream of unsigned 8-bit integers. 
+
+- - Many signals , one idea
+Every demodulation asks one of two questions:
+IQ point -> how far from the origin?
+         -> 
+
+FM step 1: 
+FM step 2: demodulate
+FM the whole loop
+
+Why Rust:
+960,000 sample a second gives us a microsecond per sample
+
+two threads sharing one buffer. 
+no garbage collector
+
+- AM RAdio: The same Pipeline
+
+- ADS-B
+Skyward: decodes signals from aircrafts above . shows the position on a UI which is a map.
+ADS-B pipeline
+magnitude. the pattern is bits
+Demodulator: is on-off keyed. phase carries nothing so magnitude is the whole demodulator
+BITs in Time: 
+
+The crates:
+- radio & dsp
+* rtl-sdt-rs
+* num-complex
+* rustfft
+
+- Audio
+* cpal
+* hound
+
+- Hardware 
+* rtl-sdr blog
+
+
+
+### When Safe Code is Fast: Scientific computing in Rust / Manuel Drehwald
+
+Speaker has a focus on quantum chemistry software, and making the Rust compiler better suited for it
+
+Focus on the Middle-level IR and the LLVM IRs (where most of the optimization happens)
+
+2 LLVM projects: Offload (cross-vendor GPU support) and Enzyme (automatic differentiation)
+
+This talk is to challenge the idea that safe Rust is a performance tradeoff, and that if you want it to be extremely fast,
+you have to sacrifice safety.  We'll see examples where safe idiomatic rust is faster than an unsafe implementation.
+
+* `std::autodiff`
+  * Example where an unsafe version with raw pointer had millions more `malloc` calls than an idiomatic safe rust
+* Example of a C --> Rust port with C2Rust
+  * Changing from RangeInclusive to Range really helped (RangeInclusive has an extra boolean on the struct, making it harder to keep in CPU cache)
+* `unsafe` rust can have significantly slower compile time
+* Example of porting gpt2 llm from C to Rust.  The original C does one huge allocation at the beginning,
+  recreating these memory characteristics took some work!  But they did.
+
+
+Working on improving the interface for working with GPU
+* `offload!` macro
+* As opposed the the manual C++ situation, using safe rust completed the benchmark without having to transfer as much data -- the
+  compiler prevented unnecessary transfers if I understand correctly
+
+Optimizations: if you modify a raw pointer in a loop, LLVM can't do a lot of its optimizations
+
+
+### Redox OS Update
+Redox OS is a Unix-like operating system written in Rust and community developed. Redox is intended to be a complete alternative to Linux, for the cloud and desktop. Ron will provide an overview of new features and recent progress
+
+
+
+
+### Building Rust Africa
+
+Rust Africa began as a small, informal developer community and evolved into a structured, cross-continental initiative working to institutionalize Rust across multiple African countries. This talk presents the strategic decisions, governance models, incorporation debates, and operational challenges behind building a sustainable open-source ecosystem in an emerging market context.
+
+Rather than focusing on inspiration, the session examines execution: selecting a jurisdiction for nonprofit incorporation, designing leadership structures to prevent fragmentation, securing partnerships, managing volunteer burnout, and aligning with global Rust ecosystem stakeholders. It also highlights measurable impact, from community expansion to industry engagement.
+
+Attendees will gain an inside look at what it takes to scale a programming language ecosystem where infrastructure, funding, and institutional support are limited. The talk concludes with a practical blueprint for building resilient Rust communities in underrepresented regions, offering lessons applicable beyond Africa.
+
+* Rust was already in Africa, there were lots of Rust programmers on the continent, it was adding the organization
+* Creating governance structure, how to prevent one country from dominating the governance?  How to make Rust Aftica outlive its founders?
+* Worked with community leaders across Africa to negotiate a shared vision
+* Institution Building is difficult!
+* 4,000 members across 7 countries, with 2 continent-wide hackathons
+
+
+### Using the Rust Standard Library on High-End MCUs
+Most embedded Rust software is no_std. However, as more powerful microcontrollers become available, we may be able to use the Rust standard library to simplify embedded development. Learn what it's like to port and use the Rust standard library in embedded projects, with comparisons against existing no_std and std solutions. 
+
+* ThreadX -- an OS for microcontrollers
+* The speaker is working to run std modules on ThreadX
+
+
+
+
+### Tips for Speeding Up Cargo Build in CI
+The Rust maintenance team has done a lot of work to speed up compilation times, particularly for iterative development, but how can we speed up compilation for situations like CI where we ought to start with a blank slate? This talk will discuss quick, practical tips for easy ways to speed up a CI build. 
+
+* Rust compiler is optimized for incremental builds
+* CI starts fresh, rather than incremental
+* Their project is called Ginger OS
+  * In ci they run cargo clippy, cargo build, cargo test, system integration tests
+
+
+* `cargo build --timings` -- you can profile your build time
+* `cargo-machete` and `cargo-udeps` to find unused dependencies
+
+* Run `cargo clippy`, `cargo test` in the same build so it doesn't have to repeat all the work
+
+-Caching
+* cargo registry/git cache
+* target/caching
+* sccache
+* swatinem/rust-cache
+
+If linking is your bottleneck, try a different liner (`lld` or `mold`)
+
+
+### Layered Configuration and Safe Hot Reload in Rust
+Hot reloading configuration in long-running services is often treated as a file-watching problem. In practice, most failures occur because configuration is mutated in place, partially applied, or insufficiently validated before entering runtime state.
+
+This lightning talk presents a layered configuration model that makes safe hot reload a natural consequence of system design. Configuration flows through clearly separated stages: an operator-facing specification, parsing into an in-memory representation, structured validation, transformation into a runtime representation, and finally an immutable runtime snapshot used by the system.
+
+Each stage produces a distinct representation with an explicit boundary and purpose. Validation happens before the runtime state exists. After validation, the runtime configuration is immutable and can be atomically replaced as a unit.
+
+By separating specification from runtime and relying on immutable snapshots, hot reload becomes a matter of constructing a new validated configuration and swapping it in, rather than mutating global state. Rust’s type system and ownership model make these boundaries explicit and enforceable, reducing the risk of partial updates and inconsistent behavior.
+
+The pattern applies broadly to long-running Rust services that need reliable configuration updates without restarts or shared mutable state. 
+
+
+
+### Building Efficient Web Scrapers
+This talk explores the considerations and design choices for developing efficient web scrapers. It centers on a comparative analysis between Python and Rust. Contrasting Python's ease of use and rich data science ecosystem, with Rust's advantages in performance, memory safety, and concurrency. 
+
+- The ingest layer
+* Tokio
+* Reqwest
+* Decrypt & decompress
+* stream and transport
+
+### Implementing a High Performance Serialization Library
+This talk introduces wincode, a high-performance Rust serialization library. You’ll learn how hidden copies can sneak into otherwise safe code, how placement initialization helps avoid them, and how compile-time metadata can dramatically improve performance without sacrificing ergonomics or maintainability. 
+
+
+### Zero-copy Transfers with io_uring and Rust
+This talk examines the performance costs of epoll-based file-to-socket I/O, including redundant memory copies and excessive syscalls. It then shows how Rust and io_uring achieve high-throughput, low-latency file-to-network transfers using fixed buffers, registered files, and sockets, demonstrated through a practical zero-copy pipeline. 
+
+* io_uring: a ring buffer that is newly in the Linux kernel
+* it does batching, it is completion-based (rather than readiness-based)
+
+
+
+### Crates in Firefox Over FFI
+We will look at integrating an existing crate (urlpattern) into Firefox's gecko platform (C++) to create a new Web API, and some challenges martialing data across ffi boundary.
